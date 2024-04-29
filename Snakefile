@@ -113,11 +113,11 @@ rule upload_viz_data:
         data = rules.viz_data.output.viz,
         headings = rules.headings.output.headings,
         notes = rules.notes.output.notes,
-        legislators = rules.legislators.output.legislators,
+        members = rules.notes.output.members,
     output:
         '.viz_uploaded.json',
     shell:
-        'bash ./scripts/07_upload_data_release.sh {input.data} {input.headings} {input.notes} {input.legislators}'
+        'bash ./scripts/07_upload_data_release.sh {input.data} {input.headings} {input.notes} {input.members}'
 
 
 # rule sync_to_dw:
