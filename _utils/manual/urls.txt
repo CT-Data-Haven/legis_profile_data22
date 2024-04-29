@@ -1,0 +1,6 @@
+file,slug
+bridgeport,xbchgknlc3oqkxk6nn7bz5n6ztafii
+hartford,7yqc5smofq5ngwoddvbekoauglnbco
+new_haven,qpqwsh7za7yyme7iiluxy7jg34ceos
+stamford,zceo5g3kzu5mhcaptbkqogdqusmkfm
+towns_basic,
