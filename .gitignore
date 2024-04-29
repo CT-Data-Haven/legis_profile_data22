@@ -1,0 +1,11 @@
+.Rproj.user
+.Rhistory
+.Rdata
+.httr-oauth
+.DS_Store
+Digraph*
+.vscode
+.snakemake
+.env
+*_uploaded.json
+*_downloaded.json

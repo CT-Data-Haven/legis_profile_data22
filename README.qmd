@@ -1,0 +1,53 @@
+---
+title: Data for legislative district profiles--2022 ACS, 2023 PLACES
+engine: knitr
+execute: 
+  echo: false
+format: gfm
+---
+
+# README
+
+Sources for the profile data are the most recent ACS (2022), CDC PLACES (2023 release), and USALEEP (not updated). There's no fresh analysis done in this repo---this is a way to assemble data from other projects with readable headings and descriptions, and prep it for each city's neighborhood profiles and online visualization.
+
+Datasets prepped for download from other repos are in their respective tagged releases to ensure their stability and reproduceability. Not all assets from each tag are used, but the files in those releases are:
+
+```{r}
+#| message: false
+repos <- list("2022acs" = "dist",
+              "cdc_aggs" = "v2023",
+              "scratchpad" = "meta") |>
+  tibble::enframe(name = "repo", value = "tag") |>
+  tidyr::unnest(tag)
+
+repos |>
+  purrr::pmap(function(repo, tag) {
+    q <- stringr::str_glue("gh release view {tag} --repo CT-Data-Haven/{repo} --json tagName,assets,url")
+    system(q, intern = TRUE)
+  }) |>
+  purrr::map(jsonlite::fromJSON) |>
+  purrr::map(dplyr::as_tibble) |>
+  purrr::map(tidyr::unnest, assets, names_sep = "_") |>
+  purrr::map(dplyr::select, tag = tagName, assets_name, url, updated = assets_updatedAt) |>
+  purrr::map(dplyr::mutate, repo = stringr::str_extract(url, "(?<=CT\\-Data\\-Haven\\/)(\\w+)(?=\\/)")) |>
+  dplyr::bind_rows() |>
+  dplyr::mutate(tag = stringr::str_glue("[{tag}]({url})")) |>
+  dplyr::group_by(repo, tag, updated) |>
+  dplyr::summarise(assets = toString(assets_name)) |>
+  knitr::kable()
+```
+
+This uses snakemake to build. Rules available are:
+
+```{bash}
+snakemake --list-rules
+```
+
+Build process is as follows:
+
+
+```{bash}
+snakemake --filegraph | dot -T png > dag.png
+```
+
+![snakemake DAG](dag.png)
