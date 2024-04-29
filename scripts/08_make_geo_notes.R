@@ -23,9 +23,8 @@ members <- inner_join(xwalk, members, by = c("house", "id")) |>
 
 
 notes <- list(
-  sources = sources, 
+  sources = sources 
   # dwurls = urls,
-  NULL
 )
 jsonlite::write_json(notes, file.path("to_viz", "notes.json"), auto_unbox = TRUE)
 
