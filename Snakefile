@@ -120,19 +120,19 @@ rule upload_viz_data:
         'bash ./scripts/07_upload_data_release.sh {input.data} {input.headings} {input.notes} {input.members}'
 
 
-# rule sync_to_dw:
-#     input:
-#         rules.distro.output,
-#     output:
-#         '.dw_uploaded.json',
-#     params:
-#         key = os.environ['DW_AUTH_TOKEN'],
-#         year = acs_year,
-#         files = rules.distro.output,
-#     shell:
-#         '''
-#         bash ./scripts/06_sync_to_dw.sh {params.key} {params.year} {params.files}
-#         '''
+rule sync_to_dw:
+    input:
+        rules.distro.output,
+    output:
+        '.dw_uploaded.json',
+    params:
+        key = os.environ['DW_AUTH_TOKEN'],
+        year = acs_year,
+        files = rules.distro.output,
+    shell:
+        '''
+        bash ./scripts/06_sync_to_dw.sh {params.key} {params.year} {params.files}
+        '''
     
 
 # ---- MAIN TARGETS ----
@@ -155,7 +155,7 @@ rule all:
         rules.distro.output,
         rules.upload_shapes.output,
         rules.upload_viz_data.output,
-        # rules.sync_to_dw.output,
+        rules.sync_to_dw.output,
         rules.download_data.output.flag,
 
 # ---- CLEANUP ----

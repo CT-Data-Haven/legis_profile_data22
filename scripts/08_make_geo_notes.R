@@ -16,10 +16,13 @@ members <- readRDS("_utils/legislators.rds")  |>
 
 sources <- readr::read_delim("_utils/manual/sources.txt", delim = ";", show_col_types = FALSE)
 
-members <- inner_join(xwalk, members, by = c("house", "id")) |>
+members_split <- inner_join(xwalk, members, by = c("house", "id")) |>
   arrange(house, id) |>
   split(~house) |>
-  map(select, -house, -dist)
+  map(\(x) split(x, x$id)) |>
+  map_depth(2, select, -house, -dist, -id) |>
+  map_depth(2, as.list) |>
+  map_depth(2, \(x) modify_at(x, "towns", unlist))
 
 
 notes <- list(
@@ -28,4 +31,4 @@ notes <- list(
 )
 jsonlite::write_json(notes, file.path("to_viz", "notes.json"), auto_unbox = TRUE)
 
-jsonlite::write_json(members, "to_viz/members.json", auto_unbox = TRUE)
+jsonlite::write_json(members_split, "to_viz/members.json", auto_unbox = TRUE)
