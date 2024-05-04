@@ -24,10 +24,13 @@ members_split <- inner_join(xwalk, members, by = c("house", "id")) |>
   map_depth(2, as.list) |>
   map_depth(2, \(x) modify_at(x, "towns", unlist))
 
+urls <- readr::read_csv(file.path("_utils", "manual", "urls.txt"), show_col_types = FALSE) |>
+  tibble::deframe() |>
+  as.list()
 
 notes <- list(
-  sources = sources 
-  # dwurls = urls,
+  sources = sources, 
+  dwurls = urls
 )
 jsonlite::write_json(notes, file.path("to_viz", "notes.json"), auto_unbox = TRUE)
 

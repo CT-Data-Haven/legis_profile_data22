@@ -23,7 +23,9 @@ prof_wide <- readRDS(file.path("output_data", stringr::str_glue("all_legis_{acs_
   imap(function(df, house) {
     mutate(df, name = ifelse(grepl("District", name), dist_id(name, house), name))
   }) |>
-  map(select, -year) |>
+  map(mutate, order = readr::parse_number(name)) |>
+  map(arrange, level, order) |>
+  map(select, -year, -order) |>
   map(rename, location = name) |>
   map(~ split(., .$topic)) |>
   map_depth(2, tidyr::pivot_wider, names_from = indicator) |>

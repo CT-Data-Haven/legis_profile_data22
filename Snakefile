@@ -51,6 +51,7 @@ rule notes:
         legislators = rules.legislators.output.legislators,
         xwalk = rules.legislators.output.xwalk,
         sources = '_utils/manual/sources.txt',
+        urls = '_utils/manual/urls.txt',
     output:
         notes = 'to_viz/notes.json',
         members = 'to_viz/members.json',
